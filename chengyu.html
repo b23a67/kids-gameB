@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>幼儿成语接龙（终极修正版）</title>
+    <style>
+        body { text-align: center; font-family: "微软雅黑"; padding: 20px; background: #f0f8fb; }
+        h1 { color: #2c3e50; }
+        #currentIdiom { 
+            font-size: 32px; 
+            color: #3498db; 
+            margin: 30px 0; 
+            padding: 15px; 
+            background: white; 
+            border-radius: 10px; 
+            display: inline-block;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .option-btn {
+            padding: 15px 30px;
+            margin: 10px;
+            font-size: 22px;
+            border: none;
+            border-radius: 10px;
+            background: #e1f5fe;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option-btn:hover { 
+            background: #b3e5fc; 
+            transform: scale(1.05);
+        }
+        .correct { background: #c8e6c9 !important; }
+        .wrong { background: #ffcdd2 !important; }
+    </style>
+</head>
+<body>
+    <h1>成语接龙小挑战</h1>
+    <p>找到尾字相同的成语接下去吧！</p>
+    <div id="currentIdiom">开门见山</div>
+    <div id="options">
+        <button class="option-btn" onclick="checkAnswer(this, '山高水长')">山高水长</button>
+        <button class="option-btn" onclick="checkAnswer(this, '花红柳绿')">花红柳绿</button>
+        <button class="option-btn" onclick="checkAnswer(this, '天高地厚')">天高地厚</button>
+    </div>
+
+    <script>
+        // 成语库：仅1个正确同尾成语，其余选项尾字不同
+        const idiomLib = {
+            "开门见山": { // 尾字"山"
+                correct: "山高水长", // 首字"山"
+                wrong1: "花红柳绿", // 首字"花"（不同）
+                wrong2: "天高地厚"  // 首字"天"（不同）
+            },
+            "山高水长": { // 尾字"长"
+                correct: "长长久久", // 首字"长"
+                wrong1: "欣欣向荣", // 首字"欣"（不同）
+                wrong2: "津津有味"  // 首字"津"（不同）
+            },
+            "长长久久": { // 尾字"久"
+                correct: "久别重逢", // 首字"久"
+                wrong1: "念念不忘", // 首字"念"（不同）
+                wrong2: "历历在目"  // 首字"历"（不同）
+            },
+            "久别重逢": { // 尾字"逢"
+                correct: "逢凶化吉", // 首字"逢"
+                wrong1: "遥遥领先", // 首字"遥"（不同）
+                wrong2: "息息相关"  // 首字"息"（不同）
+            },
+            "逢凶化吉": { // 尾字"吉"
+                correct: "吉人天相", // 首字"吉"
+                wrong1: "蒸蒸日上", // 首字"蒸"（不同）
+                wrong2: "亭亭玉立"  // 首字"亭"（不同）
+            }
+        };
+        let currentIdiom = "开门见山";
+
+        // 检查答案
+        function checkAnswer(btn, selected) {
+            const currentData = idiomLib[currentIdiom];
+            if (selected === currentData.correct) {
+                btn.classList.add("correct");
+                setTimeout(() => {
+                    alert("答对啦！真棒！");
+                    // 下一关
+                    currentIdiom = currentData.correct;
+                    if (idiomLib[currentIdiom]) {
+                        updateGame();
+                    } else {
+                        alert("恭喜通关！");
+                        location.reload();
+                    }
+                }, 500);
+            } else {
+                btn.classList.add("wrong");
+                setTimeout(() => {
+                    alert(`不对哦～正确答案是${currentData.correct}`);
+                    btn.classList.remove("wrong");
+                }, 500);
+            }
+        }
+
+        // 刷新游戏
+        function updateGame() {
+            const data = idiomLib[currentIdiom];
+            document.getElementById("currentIdiom").textContent = currentIdiom;
+            // 随机排序选项
+            const options = [
+                { text: data.correct },
+                { text: data.wrong1 },
+                { text: data.wrong2 }
+            ].sort(() => Math.random() - 0.5);
+            // 更新按钮
+            const btnEls = document.querySelectorAll(".option-btn");
+            btnEls.forEach((btn, index) => {
+                btn.textContent = options[index].text;
+                btn.className = "option-btn";
+                btn.onclick = () => checkAnswer(btn, options[index].text);
+            });
+        }
+    </script>
+</body>
+</html>
